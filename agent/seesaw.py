@@ -5,7 +5,7 @@ import traceback
 import re
 import os
 
-wl = ['192.168.204.5']
+white_list = ['192.168.204.5']
 
 def check_for_reversed_shell(lsof):
     '''
@@ -31,8 +31,8 @@ def check_for_reversed_shell(lsof):
         elif 'cwd' in fd:
             pwd = detail[-1]
     if peer:
-        for w in wl:
-            if peer.startswith(w):
+        for ip in white_list:
+            if peer.startswith(ip+':'):
                 return False, None
     return (is_bash and has_socket and not has_tty), peer, pwd
 
