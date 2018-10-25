@@ -1,6 +1,6 @@
 # Seesaw
 
-基于Netlink套接字的进程监控，主动检测进程打开FD，发现并处理反弹Shell行为。
+基于Netlink Socket的进程监控，主动检测进程打开FD，发现并处理反弹Shell行为。
 
 ### 思路
 
@@ -13,3 +13,7 @@
 ### 系统兼容性
 
 所有内核支持Netlink通信机制的操作系统。
+
+### Dependency
+
+依赖于https://github.com/dbrandt/proc_events项目，用于监听Netlink Socket。
