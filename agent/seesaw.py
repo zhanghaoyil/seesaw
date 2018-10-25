@@ -33,7 +33,7 @@ def check_for_reversed_shell(lsof):
     if peer:
         for ip in white_list:
             if peer.startswith(ip+':'):
-                return False, None
+                return False, None, None
     return (is_bash and has_socket and not has_tty), peer, pwd
 
 def deal(pid):
