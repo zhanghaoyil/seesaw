@@ -5,6 +5,8 @@ import traceback
 import re
 import os
 
+wl = ['192.168.204.5']
+
 def check_for_reversed_shell(lsof):
     '''
     if the process was bash which had got remote socket and not got tty, then it must be a reversed shell.
@@ -26,6 +28,10 @@ def check_for_reversed_shell(lsof):
             peer = detail[-2].split('->')[1]
         elif 'txt' in fd and re.findall('bash', detail[-1]):
             is_bash = True
+    if peer:
+        for w in wl:
+            if peer.startswith(w):
+                return False, None
     return (is_bash and has_socket and not has_tty), peer
 
 def deal(pid):
