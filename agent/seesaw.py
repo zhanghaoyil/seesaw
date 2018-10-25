@@ -16,7 +16,7 @@ def check_for_reversed_shell(lsof):
     '''
     fds = [x.strip() for x in lsof.split('\n') if x]
     is_bash = has_socket = has_tty = False
-    peer = None
+    peer = pwd = None
     for fd in fds:
         detail = fd.split()
         fd = detail[3]
@@ -28,11 +28,13 @@ def check_for_reversed_shell(lsof):
             peer = detail[-2].split('->')[1]
         elif 'txt' in fd and re.findall('bash', detail[-1]):
             is_bash = True
+        elif 'cwd' in fd:
+            pwd = detail[-1]
     if peer:
         for w in wl:
             if peer.startswith(w):
                 return False, None
-    return (is_bash and has_socket and not has_tty), peer
+    return (is_bash and has_socket and not has_tty), peer, pwd
 
 def deal(pid):
     # simple and efficient kill
@@ -54,10 +56,11 @@ if __name__ == "__main__":
                     out, err = p.communicate()
                     if out:
                         try:
-                            positive, peer = check_for_reversed_shell(out)
+                            positive, peer, pwd = check_for_reversed_shell(out)
                             if positive:
                                 deal(e['process_tgid'])
-                                print('######\n###Reversed Shell Detached: pid:%s peer:%s. Killed immediately. ###\n######' % (e['process_tgid'], peer))
+                                print('######\n### Reversed Shell Detached: pid:%s peer:%s webshell directory: %s.###\n'
+                                      '### Killed immediately. ###\n######' % (e['process_tgid'], peer, pwds))
                         except Exception as ex:
                             traceback.print_exc(ex)
             except Exception as ex:
