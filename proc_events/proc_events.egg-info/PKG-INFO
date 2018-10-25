@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: proc-events
+Version: 0.1b0.dev1
+Summary: Interface to the process event connector in linux kernels.
+Home-page: http://dbrandt.se/proc_events
+Author: Daniel Brandt
+Author-email: me@dbrandt.se
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
