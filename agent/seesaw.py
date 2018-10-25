@@ -5,6 +5,12 @@ import traceback
 import re
 
 def check_for_reversed_shell(lsof):
+    '''
+    if the process was bash which had got remote socket and not got tty, then it must be a reversed shell.
+    :param lsof:
+    :return: positive: bool
+             peer: remote socket
+    '''
     fds = [x.strip() for x in lsof.split('\n') if x]
     is_bash = has_socket = has_tty = False
     peer = None
@@ -26,6 +32,7 @@ if __name__ == "__main__":
     for e in pec_loop():
         if e['what'] == 'PROC_EVENT_EXEC':
             try:
+                #exclude lsof processes
                 if e['process_tgid'] in self_pids:
                     self_pids.remove(e['process_tgid'])
                     continue
@@ -43,4 +50,5 @@ if __name__ == "__main__":
             except Exception as ex:
                 traceback.print_exc(ex)
             finally:
+                #prevent self-excitation
                 self_pids.append(int(p.pid))
