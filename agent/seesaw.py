@@ -60,9 +60,9 @@ if __name__ == "__main__":
                             if positive:
                                 deal(e['process_tgid'])
                                 print('######\n### Reversed Shell Detached ###\n'
-                                      'pid:%s\n'
-                                      'peer:%s\n'
-                                      'webshell directory: %s.\n'
+                                      '### pid:%s ###\n'
+                                      '### peer:%s ###\n'
+                                      '### webshell directory: %s ###\n'
                                       '### Killed immediately. ###\n######' % (e['process_tgid'], peer, pwd))
                         except Exception as ex:
                             traceback.print_exc(ex)
