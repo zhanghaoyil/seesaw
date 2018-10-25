@@ -9,7 +9,7 @@ def check_for_reversed_shell(lsof):
     if the process was bash which had got remote socket and not got tty, then it must be a reversed shell.
     :param lsof:
     :return: positive: bool
-             peer: remote socket
+             peer: str remote socket
     '''
     fds = [x.strip() for x in lsof.split('\n') if x]
     is_bash = has_socket = has_tty = False
