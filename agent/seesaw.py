@@ -3,6 +3,7 @@ import subprocess
 import shlex
 import traceback
 import re
+import os
 
 def check_for_reversed_shell(lsof):
     '''
@@ -27,6 +28,10 @@ def check_for_reversed_shell(lsof):
             is_bash = True
     return (is_bash and has_socket and not has_tty), peer
 
+def deal(pid):
+    # simple and efficient kill
+    os.system('kill -9 %s' % (pid,))
+
 if __name__ == "__main__":
     self_pids = []
     for e in pec_loop():
@@ -38,17 +43,16 @@ if __name__ == "__main__":
                     continue
                 else:
                     p = subprocess.Popen(shlex.split('lsof -p %s -Pn' % (e['process_tgid'])), stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    # prevent self-excitation
+                    self_pids.append(int(p.pid))
                     out, err = p.communicate()
                     if out:
                         try:
                             positive, peer = check_for_reversed_shell(out)
                             if positive:
-                                print(out)
+                                deal(e['process_tgid'])
                                 print('######\n###Reversed Shell Detached: pid:%s peer:%s. Killed immediately. ###\n######' % (e['process_tgid'], peer))
                         except Exception as ex:
                             traceback.print_exc(ex)
             except Exception as ex:
                 traceback.print_exc(ex)
-            finally:
-                #prevent self-excitation
-                self_pids.append(int(p.pid))
